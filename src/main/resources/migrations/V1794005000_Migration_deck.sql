@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS deck (id uuid PRIMARY KEY, "name" VARCHAR(256) NOT NULL, description VARCHAR(2048) NOT NULL, creator uuid NOT NULL, tags TEXT[] NOT NULL, views_authenticated INT NOT NULL, views_unauthenticated INT NOT NULL, CONSTRAINT fk_deck_creator__id FOREIGN KEY (creator) REFERENCES "user"(id) ON DELETE RESTRICT ON UPDATE RESTRICT);

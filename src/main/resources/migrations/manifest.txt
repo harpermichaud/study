@@ -1,0 +1,9 @@
+V1794001462_Migration_Migration
+V1794001463_Migration_User
+V1794005000_Migration_migration
+V1794005000_Migration_attachment
+V1794005000_Migration_card
+V1794005000_Migration_deck
+V1794005000_Migration_star
+V1794005000_Migration_user_private
+V1794005000_Migration_user

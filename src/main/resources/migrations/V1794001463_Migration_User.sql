@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS "user" (id uuid PRIMARY KEY, username VARCHAR(128) NOT NULL, "admin" BOOLEAN DEFAULT FALSE NOT NULL);
+ALTER TABLE "user" ADD CONSTRAINT user_username_unique UNIQUE (username);
