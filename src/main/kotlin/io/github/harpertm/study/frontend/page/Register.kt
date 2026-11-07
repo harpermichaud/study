@@ -2,6 +2,7 @@ package io.github.harpertm.study.frontend.page
 
 import io.github.harpertm.study.frontend.layout.LayoutDefault
 import io.github.harpertm.study.model.FrontendContext
+import kotlinx.html.FormMethod
 import kotlinx.html.HTML
 import kotlinx.html.button
 import kotlinx.html.div
@@ -21,13 +22,13 @@ fun HTML.RegisterPage(
 		div(classes = "center-box") {
 			div(classes = "content") {
 				h1 { +"Register" }
-				form {
+				form(action = "/api/form/register", method = FormMethod.post) {
 					input {
-						id = "username"
+						name = "username"
 						placeholder = "Username"
 					}
 					passwordInput {
-						id = "password"
+						name = "password"
 						placeholder = "Password"
 					}
 

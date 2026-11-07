@@ -5,17 +5,21 @@ import io.github.harpertm.study.db.table.UserPrivateTable
 import io.github.harpertm.study.db.table.UserTable
 import io.github.harpertm.study.model.exception.ApiException
 import io.github.harpertm.study.service.CacheService
+import io.github.harpertm.study.service.UserService
 import io.github.harpertm.study.util.BCRYPT_COST
+import io.github.harpertm.study.util.COOKIE_DURATION_SECONDS
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receiveParameters
+import io.ktor.server.response.header
+import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.Routing
-import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import org.jetbrains.exposed.v1.r2dbc.insert
 import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 import java.util.UUID
 
 fun Routing.register() {
-	get("/register") {
+	post("/api/form/register") {
 		val formParameters = call.receiveParameters()
 
 		val username = formParameters["username"]
@@ -45,8 +49,6 @@ fun Routing.register() {
 		val id = UUID.randomUUID()
 		val hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.toCharArray())
 
-		throw ApiException(HttpStatusCode.NotImplemented, "Not implemented")
-
 		suspendTransaction {
 			UserTable.insert {
 				it[UserTable.id] = id
@@ -58,7 +60,9 @@ fun Routing.register() {
 			}
 		}
 
-		//call.response.header("Set-Cookie", "StudyAuthToken=$token; Path=/; Max-Age=COOKIE_DURATION_SECONDS; SameSite=Lax")
-		//call.respondRedirect("/")
+		val token = UserService.generateToken(id)
+
+		call.response.header("Set-Cookie", "StudyAuthToken=$token; Path=/; Max-Age=$COOKIE_DURATION_SECONDS; SameSite=Lax")
+		call.respondRedirect("/")
 	}
 }

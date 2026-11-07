@@ -3,13 +3,4 @@ ktor:
     port: 8080
   application:
     modules:
-      - io.github.harpermichaud.HttpKt.configureHttp
-      - io.github.harpermichaud.MonitoringKt.configureMonitoring
-      - io.github.harpermichaud.SerializationKt.configureSerialization
-      - io.github.harpermichaud.AutoHeadResponseKt.configureAutoHeadResponse
-      - io.github.harpermichaud.RequestValidationKt.configureRequestValidation
-      - io.github.harpermichaud.ExposedKt.configureExposed
-      - io.github.harpermichaud.PostgresKt.configurePostgres
-      - io.github.harpermichaud.ThymeleafKt.configureThymeleaf
-      - io.github.harpermichaud.RateLimitingKt.configureRateLimiting
-      - io.github.harpermichaud.RoutingKt.configureRouting
+      - io.github.harpertm.study.MainKt.module
