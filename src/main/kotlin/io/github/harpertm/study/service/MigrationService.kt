@@ -44,15 +44,16 @@ object MigrationService {
 			suspendTransaction {
 				MigrationUtils.generateMigrationScript(
 					table,
-					scriptDirectory = "src/io.github.harpertm.study.main/resources/migrations",
+					scriptDirectory = "src/main/resources/migrations",
 					scriptName = name,
 				)
 			}
+
+			// todo: check if migrations are blank before this
 			addedMigrations.add(name)
 		}
 
-		val manifestPath = Path("src/io.github.harpertm.study.main/resources/migrations/manifest.txt")
-		// todo: check if migrations are blank before this
+		val manifestPath = Path("src/main/resources/migrations/manifest.txt")
 		manifestPath.appendLines(addedMigrations)
 	}
 
@@ -88,14 +89,13 @@ object MigrationService {
 
 		if (!isInitialized()) pending.addAll(manifest)
 		else {
-			val unexecuted = suspendTransaction {
+			val executed = suspendTransaction {
 				MigrationTable.selectAll()
-					.where { MigrationTable.id notInList manifest }
 					.orderBy(MigrationTable.id, SortOrder.DESC)
 					.map { it[MigrationTable.id].toString() }
 					.toList()
 			}
-			pending.addAll(unexecuted)
+			pending.addAll(manifest.filter { it !in executed })
 		}
 
 		pending.forEach { migration ->

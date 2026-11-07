@@ -1,8 +1,8 @@
 package io.github.harpertm.study.model
 
-import io.ktor.server.routing.RoutingCall
+import io.ktor.server.application.ApplicationCall
 
 data class FrontendContext(
-	val call: RoutingCall,
+	val call: ApplicationCall,
 	val user: User? = null
 )

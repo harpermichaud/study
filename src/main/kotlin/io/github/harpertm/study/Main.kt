@@ -1,12 +1,19 @@
 package io.github.harpertm.study
 
 import io.github.harpertm.study.db.Database
+import io.github.harpertm.study.frontend.page.ErrorPage
+import io.github.harpertm.study.model.exception.ApiException
+import io.github.harpertm.study.route.buildCtx
+import io.github.harpertm.study.service.CacheService
 import io.github.harpertm.study.service.MigrationService
+import io.github.harpertm.study.util.background
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.html.respondHtml
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.calllogging.CallLogging
+import io.ktor.server.plugins.statuspages.StatusPages
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import kotlin.system.exitProcess
@@ -22,6 +29,8 @@ fun main(args: Array<String>) {
 
 		// don't run in the case they're potentially executing migrations
 		if (args.isEmpty()) {
+			background { CacheService.initialize() }
+
 			val isDbUpToDate = runBlocking { MigrationService.isDatabaseUpToDate() }
 			if (!isDbUpToDate) {
 				applicationLogger.error("There are pending migrations, run the executable again with the argument 'migration:execute'")
@@ -43,6 +52,16 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
 	install(CallLogging)
+
+	install(StatusPages) {
+		exception<ApiException> { call, cause ->
+			call.respondHtml(status = cause.status) { ErrorPage(call.buildCtx(), cause.message ?: "Internal server error") }
+		}
+
+		exception<Throwable> { call, cause ->
+			call.respondHtml { ErrorPage(call.buildCtx(), cause.message ?: "Internal server error") }
+		}
+	}
 
 	setupSerialization()
 	setupAuthentication()

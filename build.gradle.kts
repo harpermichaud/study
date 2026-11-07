@@ -39,5 +39,7 @@ dependencies {
 	implementation("org.jetbrains.exposed:exposed-migration-core:1.6.1")
 	implementation("org.jetbrains.exposed:exposed-migration-r2dbc:1.6.1")
 	implementation("org.jetbrains.exposed:exposed-kotlin-datetime:1.6.1")
+	implementation("at.favre.lib:bcrypt:0.10.2")
+	implementation(ktorLibs.server.statusPages)
 	implementation(ktorLibs.server.htmlBuilder)
 }

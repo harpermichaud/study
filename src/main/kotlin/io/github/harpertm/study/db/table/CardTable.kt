@@ -1,9 +1,10 @@
 package io.github.harpertm.study.db.table
 
+import io.github.harpertm.study.util.MAX_CARD_TEXT_LENGTH
 import org.jetbrains.exposed.v1.core.dao.id.UuidTable
 
 object CardTable : UuidTable("card") {
-	val front = varchar("front", 100000)
-	val back = varchar("back", 100000)
+	val front = varchar("front", MAX_CARD_TEXT_LENGTH)
+	val back = varchar("back", MAX_CARD_TEXT_LENGTH)
 	val attachments = array<String>("attachments")
 }

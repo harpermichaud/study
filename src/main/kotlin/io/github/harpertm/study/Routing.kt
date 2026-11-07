@@ -1,5 +1,6 @@
 package io.github.harpertm.study
 
+import io.github.harpertm.study.route.api.form.register
 import io.github.harpertm.study.route.frontend
 import io.ktor.server.application.Application
 import io.ktor.server.http.content.staticResources
@@ -16,5 +17,7 @@ fun Application.setupRouting() {
 		}
 
 		frontend()
+
+		register()
 	}
 }
