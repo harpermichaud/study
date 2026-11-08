@@ -2,6 +2,7 @@ package io.github.harpertm.study.frontend.page
 
 import io.github.harpertm.study.frontend.layout.LayoutDefault
 import io.github.harpertm.study.model.FrontendContext
+import io.github.harpertm.study.util.userOrNull
 import kotlinx.html.HTML
 import kotlinx.html.h1
 import kotlinx.html.title
@@ -12,7 +13,7 @@ fun HTML.IndexPage(
 	LayoutDefault(ctx, head = {
 		title { +"Home" }
 	}) {
-		if (ctx.user != null) {
+		if (ctx.call.userOrNull() != null) {
 			h1 { +"Recently Used" }
 			h1 { +"Pinned" }
 		}

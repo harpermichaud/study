@@ -8,7 +8,6 @@ import kotlinx.html.button
 import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h1
-import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.passwordInput
 import kotlinx.html.title

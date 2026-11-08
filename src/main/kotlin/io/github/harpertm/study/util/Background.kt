@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 val backgroundScope = CoroutineScope(Dispatchers.Default + CoroutineName("Background"))
+
 inline fun background(
 	crossinline block: suspend () -> Unit
 ) { runBlocking { backgroundScope.launch { block() } } }

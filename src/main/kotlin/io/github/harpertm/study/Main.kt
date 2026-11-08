@@ -55,16 +55,17 @@ fun Application.module() {
 
 	install(StatusPages) {
 		exception<ApiException> { call, cause ->
+			cause.printStackTrace()
 			call.respondHtml(status = cause.status) { ErrorPage(call.buildCtx(), cause.message ?: "Internal server error") }
 		}
 
 		exception<Throwable> { call, cause ->
+			cause.printStackTrace()
 			call.respondHtml { ErrorPage(call.buildCtx(), cause.message ?: "Internal server error") }
 		}
 	}
 
 	setupSerialization()
-	setupAuthentication()
 
 	setupRouting()
 }

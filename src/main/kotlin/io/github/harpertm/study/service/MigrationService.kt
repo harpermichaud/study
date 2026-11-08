@@ -60,7 +60,7 @@ object MigrationService {
 	fun getManifest(): List<String> {
 		val res = this::class.java.classLoader.getResource("migrations/manifest.txt")
 			?: throw MigrationException("Migration manifest missing, binary likely corrupted")
-		return res.readText().lines()
+		return res.readText().trim().lines()
 	}
 
 	suspend fun isInitialized(): Boolean = suspendTransaction {
@@ -80,7 +80,7 @@ object MigrationService {
 
 		val manifest = getManifest()
 
-		return latest[MigrationTable.id].toString() != manifest.last()
+		return latest[MigrationTable.id].toString() == manifest.last()
 	}
 
 	suspend fun executeMigrations() {

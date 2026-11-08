@@ -1,6 +1,8 @@
 package io.github.harpertm.study.frontend.layout
 
 import io.github.harpertm.study.model.FrontendContext
+import io.github.harpertm.study.util.user
+import io.github.harpertm.study.util.userOrNull
 import kotlinx.html.FlowContent
 import kotlinx.html.HEAD
 import kotlinx.html.HTML
@@ -26,6 +28,7 @@ fun HTML.LayoutDefault(
 		styleLink("/static/index.css")
 		styleLink("/static/font.css")
 		styleLink("/static/tabler-icons.min.css")
+		styleLink("/static/tabler-icons-filled.min.css")
 	}
 	body {
 		header {
@@ -35,9 +38,9 @@ fun HTML.LayoutDefault(
 						i("ti ti-books")
 					}
 
-					if (ctx.user != null) {
-						a(classes = "nav", href = "/sets/mine") {
-							+"My Sets"
+					if (ctx.call.userOrNull() != null) {
+						a(classes = "nav", href = "/users/${ctx.call.user().username}/decks") {
+							+"My Decks"
 						}
 					}
 				}
@@ -50,9 +53,14 @@ fun HTML.LayoutDefault(
 				}
 
 				div(classes = "right") {
-					if (ctx.user != null) {
-						a(classes = "account-btn", href = "/account") {
-							+ctx.user.username
+					if (ctx.call.userOrNull() != null) {
+						a(classes="btn primary", href = "/decks/new") {
+							i("ti ti-plus")
+							+"New"
+						}
+
+						a(classes = "account-btn", href = "/users/${ctx.call.user().username}") {
+							+ctx.call.user().username
 						}
 						a(classes = "logout-btn", href = "/logout") {
 							i("ti ti-logout")

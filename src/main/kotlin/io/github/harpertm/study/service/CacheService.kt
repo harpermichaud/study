@@ -20,6 +20,7 @@ object CacheService {
 		fun getCache() = cache.toSet()
 
 		fun add(username: String) { cache.add(username.lowercase()) }
+		fun remove(username: String) { cache.remove(username.lowercase()) }
 		fun isTaken(username: String) = username.lowercase() in cache
 
 		suspend fun initialize() {

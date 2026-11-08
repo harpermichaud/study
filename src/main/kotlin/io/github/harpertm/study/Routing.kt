@@ -1,5 +1,8 @@
 package io.github.harpertm.study
 
+import io.github.harpertm.study.route.api.form.deck
+import io.github.harpertm.study.route.api.form.login
+import io.github.harpertm.study.route.api.form.logout
 import io.github.harpertm.study.route.api.form.register
 import io.github.harpertm.study.route.frontend
 import io.ktor.server.application.Application
@@ -19,5 +22,8 @@ fun Application.setupRouting() {
 		frontend()
 
 		register()
+		login()
+		logout()
+		deck()
 	}
 }

@@ -3,6 +3,7 @@ package io.github.harpertm.study.route.api.form
 import at.favre.lib.crypto.bcrypt.BCrypt
 import io.github.harpertm.study.db.table.UserPrivateTable
 import io.github.harpertm.study.db.table.UserTable
+import io.github.harpertm.study.model.User
 import io.github.harpertm.study.model.exception.ApiException
 import io.github.harpertm.study.service.CacheService
 import io.github.harpertm.study.service.UserService
@@ -13,11 +14,19 @@ import io.ktor.server.request.receiveParameters
 import io.ktor.server.response.header
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.singleOrNull
+import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.r2dbc.insert
+import org.jetbrains.exposed.v1.r2dbc.selectAll
 import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 fun Routing.register() {
 	post("/api/form/register") {
 		val formParameters = call.receiveParameters()
@@ -46,7 +55,7 @@ fun Routing.register() {
 		if (password.toByteArray().size > 72)
 			throw ApiException(HttpStatusCode.BadRequest, "Password must be shorter, try 70 or less characters")
 
-		val id = UUID.randomUUID()
+		val id = Uuid.generateV4()
 		val hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.toCharArray())
 
 		suspendTransaction {
@@ -63,6 +72,48 @@ fun Routing.register() {
 		val token = UserService.generateToken(id)
 
 		call.response.header("Set-Cookie", "StudyAuthToken=$token; Path=/; Max-Age=$COOKIE_DURATION_SECONDS; SameSite=Lax")
+		call.respondRedirect("/")
+	}
+}
+
+fun Routing.login() {
+	post("/api/form/login") {
+		val formParameters = call.receiveParameters()
+
+		val username = formParameters["username"]
+			?: throw ApiException(HttpStatusCode.BadRequest, "Username required")
+		val password = formParameters["password"]
+			?: throw ApiException(HttpStatusCode.BadRequest, "Password required")
+
+		val user = suspendTransaction {
+			UserTable.selectAll()
+				.where { UserTable.username eq username }
+				.map { User.mapFromDb(it) }
+				.singleOrNull()
+		} ?: throw ApiException(HttpStatusCode.BadRequest, "User not found")
+
+		val hashedPassword = suspendTransaction {
+			UserPrivateTable.selectAll()
+				.where { UserPrivateTable.id eq user.id }
+				.map { it[UserPrivateTable.password] }
+				.singleOrNull()
+		} ?: throw ApiException(HttpStatusCode.BadRequest, "User not found")
+
+		if (password.toByteArray().size > 72)
+
+		if (!BCrypt.verifyer().verify(password.toByteArray(), hashedPassword.toByteArray()).verified)
+			throw ApiException(HttpStatusCode.BadRequest, "Incorrect password")
+
+		val token = UserService.generateToken(user.id)
+
+		call.response.header("Set-Cookie", "StudyAuthToken=$token; Path=/; Max-Age=$COOKIE_DURATION_SECONDS; SameSite=Lax")
+		call.respondRedirect("/")
+	}
+}
+
+fun Routing.logout() {
+	get("/logout") {
+		call.response.header("Set-Cookie", "StudyAuthToken=; Path=/; Max-Age=$COOKIE_DURATION_SECONDS; SameSite=Lax")
 		call.respondRedirect("/")
 	}
 }
