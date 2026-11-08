@@ -60,7 +60,7 @@ object MigrationService {
 	fun getManifest(): List<String> {
 		val res = this::class.java.classLoader.getResource("migrations/manifest.txt")
 			?: throw MigrationException("Migration manifest missing, binary likely corrupted")
-		return res.readText().trim().lines()
+		return res.readText().lines()
 	}
 
 	suspend fun isInitialized(): Boolean = suspendTransaction {

@@ -156,7 +156,7 @@ a.btn, .btn, button {
 
 a {
     color: var(--ac-1);
-    text-decoration-color: var(--ac-1-25);
+    text-decoration-color: var(--ac-1-50);
     transition: .1s;
 
     &:hover {
@@ -285,6 +285,42 @@ form {
             flex: 1;
         }
     }
+
+    .subheader {
+        margin-top: 50px;
+
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        h2 {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+
+            margin: 0;
+
+            .count {
+                color: var(--tx-3);
+                font-size: var(--fs-m);
+            }
+        }
+
+        .right {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            flex: 1;
+        }
+    }
+
+    .cards {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 .tags {
@@ -294,6 +330,7 @@ form {
     gap: 5px;
 
     .tag {
+        font-size: var(--fs-s);
         color: var(--tx-2);
         border-radius: var(--br-s);
         background: var(--bg-2);
@@ -307,8 +344,6 @@ form {
 }
 
 .btn.star {
-
-
     .count {
         color: var(--tx-3);
     }

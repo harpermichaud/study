@@ -10,6 +10,7 @@ import io.github.harpertm.study.frontend.page.RegisterPage
 import io.github.harpertm.study.model.Deck
 import io.github.harpertm.study.model.FrontendContext
 import io.github.harpertm.study.model.exception.ApiException
+import io.github.harpertm.study.service.DeckService
 import io.github.harpertm.study.util.authentication
 import io.github.harpertm.study.util.user
 import io.ktor.http.HttpStatusCode
@@ -52,7 +53,9 @@ fun Routing.frontend() {
 			if (!deck.public && deck.creator.id != call.user().id)
 				throw ApiException(HttpStatusCode.NotFound, "Deck not found")
 
-			call.respondHtml { DeckPage(call.buildCtx(), deck, false, 0) }
+			val cards = DeckService.getCards(deck.id)
+
+			call.respondHtml { DeckPage(call.buildCtx(), deck, cards, false, 0) }
 		}
 	}
 

@@ -12,3 +12,4 @@ V1794025249_Migration_deck
 V1794025249_Migration_token
 V1794025249_Migration_user
 V1794099500_Migration_deck
+V1794107981_Migration_card
