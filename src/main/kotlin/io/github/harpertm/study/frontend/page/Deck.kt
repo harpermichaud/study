@@ -29,7 +29,7 @@ fun HTML.DeckPage(
 	stars: Long
 ) {
 	val loggedIn = ctx.call.userOrNull() != null
-	val userIsCreator = ctx.call.user().id == deck.creator.id
+	val userIsCreator = loggedIn && ctx.call.user().id == deck.creator.id
 
 	LayoutDefault(ctx, head = {
 		title { +deck.name }
@@ -98,7 +98,7 @@ fun HTML.DeckPage(
 				div("right") {
 					if (userIsCreator)
 						form(action = "/api/form/decks/${deck.id}/cards", method = FormMethod.post) {
-							button(classes = "btn", type = ButtonType.submit) {
+							button(classes = "btn primary", type = ButtonType.submit) {
 								i("ti ti-plus")
 								+"Add card"
 							}

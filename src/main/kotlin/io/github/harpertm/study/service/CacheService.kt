@@ -42,6 +42,6 @@ object CacheService {
 			UsernameCache.initialize()
 		}
 
-		logger.info("Initialized caches in $time ms")
+		logger.info("Initialized caches in background in $time ms")
 	}
 }

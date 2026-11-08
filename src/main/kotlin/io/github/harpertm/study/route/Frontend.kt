@@ -13,6 +13,7 @@ import io.github.harpertm.study.model.exception.ApiException
 import io.github.harpertm.study.service.DeckService
 import io.github.harpertm.study.util.authentication
 import io.github.harpertm.study.util.user
+import io.github.harpertm.study.util.userOrNull
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.html.respondHtml
@@ -54,6 +55,8 @@ fun Routing.frontend() {
 				throw ApiException(HttpStatusCode.NotFound, "Deck not found")
 
 			val cards = DeckService.getCards(deck.id)
+
+			DeckService.markView(deck.id, call.userOrNull() != null)
 
 			call.respondHtml { DeckPage(call.buildCtx(), deck, cards, false, 0) }
 		}
